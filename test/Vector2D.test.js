@@ -17,6 +17,12 @@ test("Constructor must accept 4 overloads", () => {
   expect(v4.y).toBeCloseTo(2, 6)
 })
 
+test("toString should return correct string", () => {
+  const v1 = new Vector2D(25, 35)
+  const ss = v1.toString()
+  expect(ss).toBe(`[Vector2D(25,35)]`)
+})
+
 test("cloneVector should return correct new vector", () => {
   const v1 = new Vector2D(25, 35)
   const v2 = v1.cloneVector()
@@ -63,6 +69,18 @@ test("rotate should return new rotated vector", () => {
   const v2 = new Vector2D(45, 1, true, true)
   const v2_2 = v2.rotate(10, true)
   expect(v2_2.angle(true)).toBeCloseTo(55)
+})
+
+test("rotateTo should return new rotated vector", () => {
+  const v1 = new Vector2D(100, 0)
+  const v1_2 = v1.rotateTo(90, true)
+  expect(v1_2.length()).toBeCloseTo(100, 6)
+  expect(v1_2.x).toBeCloseTo(0, 6)
+  expect(v1_2.y).toBe(100)
+  const v1_3 = v1.rotateTo(Math.PI / 2)
+  expect(v1_3.length()).toBeCloseTo(100, 6)
+  expect(v1_3.x).toBeCloseTo(0)
+  expect(v1_3.y).toBeCloseTo(100)
 })
 
 test("angleTo should return correct new vector", () => {
@@ -167,6 +185,8 @@ test("scalar should return correct number", () => {
   const v2 = new Vector2D(20, 30)
   const scalar = v1.scalar(v2)
   expect(scalar).toBe(800)
+  const scalar2 = v1.scalar(20, 30)
+  expect(scalar2).toBe(800)
 })
 
 test("cross should return correct number", () => {
@@ -174,6 +194,8 @@ test("cross should return correct number", () => {
   const v2 = new Vector2D(20, 30)
   const cross = v1.cross(v2)
   expect(cross).toBe(-100)
+  const cross2 = v1.cross(20, 30)
+  expect(cross2).toBe(-100)
 })
 
 test("projection should return correct vector", () => {
@@ -204,4 +226,17 @@ test("vectorToProjection should return correct vector", () => {
   const v2 = v1.vectorToProjection(100, 50)
   expect(v2.x).toBe(-20)
   expect(v2.y).toBe(40)
+  const v3_1 = new Vector2D(100, 50)
+  const v3 = v1.vectorToProjection(v3_1)
+  expect(v3.x).toBe(-20)
+  expect(v3.y).toBe(40)
+})
+
+test("log should write to console.log", () => {
+  const spy = jest.spyOn(console, "log").mockImplementation()
+  const v1 = new Vector2D(100, 0)
+  v1.log()
+  v1.log("Test")
+  expect(spy.mock.calls).toEqual([[v1], ["Test", v1]])
+  spy.mockRestore()
 })

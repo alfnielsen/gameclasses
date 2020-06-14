@@ -174,7 +174,8 @@ export default class Vector2D {
       if (arg[0] instanceof Vector2D) {
          return this.x * arg[0].y - this.y * arg[0].x
       }
-      return this.x * arg[0] - this.y * arg[1]
+      // note y then x
+      return this.x * arg[1] - this.y * arg[0]
    };
 
    /*Vector:projection on oVector */
@@ -208,7 +209,7 @@ export default class Vector2D {
       return this.delta(this.projection(arg[0], arg[1]))
    };
 
-   log(msg: string) {
+   log(msg?: string) {
       if (msg) {
          console.log(msg, this)
       } else {
