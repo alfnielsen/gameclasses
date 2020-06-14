@@ -17,12 +17,6 @@ test("Constructor must accept 4 overloads", () => {
   expect(v4.y).toBeCloseTo(2, 6)
 })
 
-test("toString should return correct string", () => {
-  const v1 = new Vector2D(25, 35)
-  const ss = v1.toString()
-  expect(ss).toBe(`[Vector2D(25,35)]`)
-})
-
 test("cloneVector should return correct new vector", () => {
   const v1 = new Vector2D(25, 35)
   const v2 = v1.cloneVector()
@@ -230,6 +224,12 @@ test("vectorToProjection should return correct vector", () => {
   const v3 = v1.vectorToProjection(v3_1)
   expect(v3.x).toBe(-20)
   expect(v3.y).toBe(40)
+})
+
+test("toString should return correct string", () => {
+  const v1 = new Vector2D(25, 35)
+  const ss = v1.toString()
+  expect(ss).toBe(`[Vector2D(25,35)]`)
 })
 
 test("log should write to console.log", () => {
