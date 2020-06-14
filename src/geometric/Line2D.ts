@@ -114,7 +114,7 @@ export default class Line2D extends Point2D {
    moveLineBy(x1: number, y1?: number, x2?: number, y2?: number): Line2D
    moveLineBy(p1: Vector2D, p2?: Vector2D): Line2D
    moveLineBy(...arg: any[]) {
-      if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
+      if (arg[0] instanceof Vector2D) {
          super.movePointBy(arg[0])
          this.p.movePointBy(arg[1] ?? arg[0])
       } else {

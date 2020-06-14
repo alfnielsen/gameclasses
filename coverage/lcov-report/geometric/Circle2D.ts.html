@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -98,22 +98,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,25 +125,25 @@ export default class Circle2D extends Point2D {
 &nbsp;
    constructor(x: number, y: number, r: number)
    constructor(p: Vector2D, r: number)
-<span class="fstat-no" title="function not covered" >   constructor(</span>
+   constructor(
       ...arg: any[]
    ) {
-<span class="cstat-no" title="statement not covered" >      if (arg[0] instanceof Vector2D) {</span>
-<span class="cstat-no" title="statement not covered" >         super(arg[0].x, arg[0].y)</span>
-<span class="cstat-no" title="statement not covered" >         this.r = arg[1]</span>
+      if (arg[0] instanceof Vector2D) {
+         super(arg[0].x, arg[0].y)
+         this.r = arg[1]
       } else {
-<span class="cstat-no" title="statement not covered" >         super(arg[0], arg[1])</span>
-<span class="cstat-no" title="statement not covered" >         this.r = arg[2]</span>
+         super(arg[0], arg[1])
+         this.r = arg[2]
       }
 &nbsp;
    }
 &nbsp;
-<span class="fstat-no" title="function not covered" >   cloneCircle(</span>): Circle2D {
-<span class="cstat-no" title="statement not covered" >      return new Circle2D(this, this.r)</span>
+   cloneCircle(): Circle2D {
+      return new Circle2D(this, this.r)
    };
 &nbsp;
-<span class="fstat-no" title="function not covered" >   toString(</span>) {
-<span class="cstat-no" title="statement not covered" >      return `[Circle2D(${this.x},${this.y},r:${this.r})}`</span>
+   toString() {
+      return `[Circle2D(${this.x},${this.y},r:${this.r})]`
    };
 &nbsp;
 }
@@ -154,7 +154,7 @@ export default class Circle2D extends Point2D {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Jun 14 2020 21:22:54 GMT+0200 (Central European Summer Time)
+                at Sun Jun 14 2020 21:28:34 GMT+0200 (Central European Summer Time)
             </div>
         </div>
         <script src="../prettify.js"></script>

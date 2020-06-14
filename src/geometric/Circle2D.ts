@@ -24,7 +24,7 @@ export default class Circle2D extends Point2D {
    };
 
    toString() {
-      return `[Circle2D(${this.x},${this.y},r:${this.r})}`
+      return `[Circle2D(${this.x},${this.y},r:${this.r})]`
    };
 
 }
