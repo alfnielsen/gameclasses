@@ -16,10 +16,6 @@ export default class Point2D extends Vector2D {
       return new Point2D(this.x, this.y)
    };
 
-   toVector() {
-      return new Vector2D(this.x, this.y)
-   };
-
 
    movePointTo(x: number, y: number): Point2D
    movePointTo(p: Vector2D): Point2D
