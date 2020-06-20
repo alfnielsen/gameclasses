@@ -612,6 +612,88 @@ export default class Canvas {
       return this
    }
 
+   circleFill(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   circleFill(c: Circle2D, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   circleFill(p: Vector2D, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   circleFill(...arg: any) {
+      this.begin()
+      if (arg[0] instanceof Circle2D) {
+         this.ctx.arc(arg[0].x, arg[0].y, arg[0].r, arg[1] ?? 0, arg[2] ?? Canvas.PI2, arg[3])
+      } else if (arg[0] instanceof Vector2D) {
+         this.ctx.arc(arg[0].x, arg[0].y, arg[1], arg[2] ?? 0, arg[3] ?? Canvas.PI2, arg[4])
+      } else {
+         this.ctx.arc(arg[0], arg[1], arg[2], arg[3] ?? 0, arg[4] ?? Canvas.PI2, arg[5])
+      }
+      this.fill()
+      return this
+   }
+
+   dot(x: number, y: number, radius?: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   dot(p: Vector2D, radius?: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   dot(...arg: any) {
+      this.begin()
+      if (arg[0] instanceof Vector2D) {
+         this.ctx.arc(arg[0].x, arg[0].y, arg[1] ?? 2, arg[2] ?? 0, arg[3] ?? Canvas.PI2, arg[4])
+      } else {
+         this.ctx.arc(arg[0], arg[1], arg[2] ?? 2, arg[3] ?? 0, arg[4] ?? Canvas.PI2, arg[5])
+      }
+      this.fill()
+      return this
+   }
+
+   arcArrow(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean, arrowAngle?: number, arrowLength?: number, degrees?: boolean): Canvas
+   arcArrow(c: Circle2D, startAngle?: number, endAngle?: number, anticlockwise?: boolean, arrowAngle?: number, arrowLength?: number, degrees?: boolean): Canvas
+   arcArrow(p: Vector2D, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean, arrowAngle?: number, arrowLength?: number, degrees?: boolean): Canvas
+   arcArrow(...arg: any) {
+      let x: number, y: number, r: number, s: number, e: number, anti: boolean, angle: number, length: number, degrees: boolean
+      if (arg[0] instanceof Circle2D) {
+         x = arg[0].x
+         y = arg[0].y
+         r = arg[0].r
+         s = arg[1] ?? 0
+         e = arg[2] ?? Canvas.PI2
+         anti = !!arg[3]
+         angle = arg[4]
+         length = arg[5]
+         degrees = arg[6]
+      } else if (arg[0] instanceof Vector2D) {
+         x = arg[0].x
+         y = arg[0].y
+         r = arg[1]
+         s = arg[2] ?? 0
+         e = arg[3] ?? Canvas.PI2
+         anti = !!arg[4]
+         angle = arg[5]
+         length = arg[6]
+         degrees = arg[7]
+      } else {
+         x = arg[0]
+         y = arg[1]
+         r = arg[2]
+         s = arg[3] ?? 0
+         e = arg[4] ?? Canvas.PI2
+         anti = !!arg[5]
+         angle = arg[6]
+         length = arg[7]
+         degrees = arg[8]
+      }
+      if (!angle) {
+         angle = 25
+         degrees = true
+      }
+      length = length ?? 7
+      this.begin().arc(x, y, r, s, e, anti).stroke()
+      const center = new Vector2D(x, y)
+      const vecToEnd = new Vector2D(e, r, true).add(x, y)
+      const angle90 = degrees ? 90 : Math.PI / 2
+      const baseAngle = anti ? -angle90 : angle90
+      const line1 = new Line2D(vecToEnd, center).rotateFromP1(baseAngle - angle * (anti ? 1 : 2), degrees).scaleLineTo(length)
+      this.line(line1)
+      const line2 = new Line2D(vecToEnd, center).rotateFromP1(baseAngle + angle * (anti ? 2 : 1), degrees).scaleLineTo(length)
+      this.line(line2)
+      return this
+   }
+
    arrow(x1: number, y1: number, x2: number, y2: number, angle?: number, length?: number, degrees?: true): Canvas
    arrow(p1: Vector2D, p2: Vector2D, angle?: number, length?: number, degrees?: true): Canvas
    arrow(line: Line2D, angle?: number, length?: number, degrees?: true): Canvas
@@ -633,19 +715,16 @@ export default class Canvas {
          length = arg[5]
          degrees = arg[6]
       }
-      angle = angle ?? 5
+      if (!angle) {
+         angle = 25
+         degrees = true
+      }
       length = length ?? 7
-      const l1 = line.cloneLine().moveLineBy(10, 0)
-      const l2 = line.cloneLine().moveLineBy(-10, 0)
 
-      const l3 = line.cloneLine().moveLineBy(10, 0).rotateFromP1(angle, degrees)//.reverse()//.scaleLineTo(length)
-      const l4 = line.cloneLine().moveLineBy(-10, 0).rotateFromP1(-angle, degrees)//.reverse()//.scaleLineTo(length)
+      const l3 = line.cloneLine().rotateFromP2(angle, degrees).scaleLineToByP2(length)
+      const l4 = line.cloneLine().rotateFromP2(-angle, degrees).scaleLineToByP2(length)
       this
          .line(line)
-         .line(l1)
-         .circle(l1.cloneVector(), 3)
-         .circle(l1.p.cloneVector(), 2)
-         .line(l2)
          .line(l3)
          .line(l4)
       return this

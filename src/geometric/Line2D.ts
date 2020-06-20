@@ -36,7 +36,7 @@ export default class Line2D extends Point2D {
       return this.deltaVector().length()
    }
 
-   angle(degrees?: true): number {
+   angle(degrees?: boolean): number {
       return this.deltaVector().angle(degrees)
    }
 
@@ -53,13 +53,13 @@ export default class Line2D extends Point2D {
       return this.p.delta(this)
    }
 
-   rotateFromP1(angle: number, degrees?: true) {
+   rotateFromP1(angle: number, degrees?: boolean) {
       let newPoint = this.deltaVector().rotate(angle, degrees).add(this)
       this.p.movePointTo(newPoint)
       return this
    }
 
-   rotateFromP2(angle: number, degrees?: true) {
+   rotateFromP2(angle: number, degrees?: boolean) {
       let newPoint = this.deltaVectorBack().rotate(angle, degrees).add(this.p)
       this.movePointTo(newPoint)
       return this
@@ -74,6 +74,12 @@ export default class Line2D extends Point2D {
    scaleLineTo(k: number) {
       const newPoint = this.deltaVector().scaleTo(k).add(this)
       this.p.movePointTo(newPoint)
+      return this
+   }
+
+   scaleLineToByP2(k: number) {
+      const newPoint = this.deltaVectorBack().scaleTo(k).add(this.p)
+      this.movePointTo(newPoint)
       return this
    }
 

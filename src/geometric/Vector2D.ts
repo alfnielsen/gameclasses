@@ -4,18 +4,22 @@ export default class Vector2D {
    public y: number
 
    constructor(p: Vector2D)
+   constructor(p1: Vector2D, p2: Vector2D)
    constructor(x: number, y: number)
-   constructor(angle: number, length: number, angleVector: true)
-   constructor(angle: number, length: number, angleVector: true, degrees: true)
+   constructor(angle: number, length: number, angleVector: boolean)
+   constructor(angle: number, length: number, angleVector: boolean, degrees: boolean)
    constructor()
    constructor(...arg: any[]) {
       if (arg[0] instanceof Vector2D) {
+         this.x = arg[1].x - arg[0].x
+         this.y = arg[1].y - arg[0].y
+      } else if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
          this.x = arg[0].x
          this.y = arg[0].y
-      } else if (arg[2] && !arg[3]) {
+      } else if (arg[2] === true && !arg[3]) {
          this.x = Math.cos(arg[0]) * arg[1]
          this.y = Math.sin(arg[0]) * arg[1]
-      } else if (arg[3]) {
+      } else if (arg[3] === true) {
          this.x = Math.cos(Vector2D.toRadians(arg[0])) * arg[1]
          this.y = Math.sin(Vector2D.toRadians(arg[0])) * arg[1]
       } else {
@@ -38,6 +42,18 @@ export default class Vector2D {
       return new Vector2D(this.x, this.y)
    };
 
+   invert() {
+      return new Vector2D(-this.x, -this.y)
+   };
+
+   invertX() {
+      return new Vector2D(-this.x, this.y)
+   };
+
+   invertY() {
+      return new Vector2D(this.x, -this.y)
+   };
+
    delta(x: number, y: number): Vector2D
    delta(vec: Vector2D): Vector2D
    delta(...arg: any[]) {
@@ -56,13 +72,13 @@ export default class Vector2D {
       return this.delta(arg[0], arg[1]).length()
    };
 
-   rotate(angle: number, degrees?: true) {
+   rotate(angle: number, degrees?: boolean) {
       const length = this.length()
       const currentAngle = this.angle(degrees)
       return new Vector2D(currentAngle + angle, length, true, degrees)
    }
 
-   rotateTo(angle: number, degrees?: true) {
+   rotateTo(angle: number, degrees?: boolean) {
       if (degrees) {
          angle = Vector2D.toRadians(angle)
       }
@@ -71,8 +87,8 @@ export default class Vector2D {
    }
 
    /*Number:radian*/
-   angleTo(x: number, y: number, degrees?: true): number
-   angleTo(vec: Vector2D, degrees?: true): number
+   angleTo(x: number, y: number, degrees?: boolean): number
+   angleTo(vec: Vector2D, degrees?: boolean): number
    angleTo(...arg: any[]) {
       if (arg[0] instanceof Vector2D) {
          return this.delta(arg[0]).angle(arg[1])
@@ -81,8 +97,8 @@ export default class Vector2D {
    };
 
    /*Number:radian*/
-   angleBetween(x: number, y: number, degrees?: true): number
-   angleBetween(vec: Vector2D, degrees?: true): number
+   angleBetween(x: number, y: number, degrees?: boolean): number
+   angleBetween(vec: Vector2D, degrees?: boolean): number
    angleBetween(...arg: any[]) {
       if (arg[0] instanceof Vector2D) {
          return Math.abs(this.angle(arg[1]) - arg[0].angle(arg[1]))
@@ -90,12 +106,12 @@ export default class Vector2D {
       return Math.abs(this.angle(arg[2]) - new Vector2D(arg[0], arg[1]).angle(arg[2]))
    };
 
-   angleVector(angle: number, length: number, degrees?: true) {
+   angleVector(angle: number, length: number, degrees?: boolean) {
       return this.add(new Vector2D(angle, length, true, degrees))
    };
 
    /*Number:radian*/
-   angle(degrees?: true) {
+   angle(degrees?: boolean) {
       const angleRadians = Math.atan2(this.y, this.x)
       if (degrees) {
          return Vector2D.toDegrees(angleRadians)

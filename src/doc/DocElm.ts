@@ -12,7 +12,7 @@ export class DocElm {
       info.className = "info"
       code.className = "code"
       canvas.elm.className = "canvas"
-      canvas.resize(200, 200)
+      canvas.resize(400, 200)
       elm.append(title)
       elm.append(info)
       elm.append(code)
@@ -21,6 +21,10 @@ export class DocElm {
    setInfo(title: string, html: string) {
       this.title.innerHTML = title
       this.info.innerHTML = html
+      return this
+   }
+   renderInfo(r: (c: Canvas) => void) {
+      r(this.canvas)
       return this
    }
    render(r: (c: Canvas) => void) {

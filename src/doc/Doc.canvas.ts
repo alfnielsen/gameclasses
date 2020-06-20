@@ -1,3 +1,4 @@
+import Canvas from "../canvas/Canvas.js"
 import Circle2D from "../geometric/Circle2D.js"
 import Line2D from "../geometric/Line2D.js"
 import Point2D from "../geometric/Point2D.js"
@@ -14,49 +15,84 @@ export default class Doc_canvas extends Doc {
       this.arc()
 
    }
-
    lineTo() {
-      this.addDoc().setInfo("lineTo", "Draw a Line").render(canvas => {
-         canvas.begin()
-            .moveTo(0, 0)
-            .lineTo(50, 50)
-            .stroke()
-      })
+      this.addDoc().setInfo("lineTo", "Draw a Line")
+         .renderInfo(canvas => {
+            canvas
+               .style('#999')
+               .fillText('Point ( 50, 50 )', 70, 40)
+               .arrow(65, 40, 55, 45)
+               .fillText('Point ( 150, 150 )', 160, 120)
+               .arrow(165, 125, 157, 140)
+               .style('#000')
+         })
+         .render(canvas => {
+            canvas.begin()
+               .moveTo(50, 50)
+               .lineTo(150, 150)
+               .stroke()
+         })
    }
-   arc() {
-      this.addDoc().setInfo("arc", "Draw a Arc").render(canvas => {
-         canvas.begin()
-            .arc(50, 50, 15)
-            .stroke()
-         const p = new Point2D(100, 50)
-         canvas.begin()
-            .arc(p, 15, Math.PI, 0)
-            .stroke()
-         // 0 to 45 degrees
-         const p2 = new Point2D(150, 50)
-         canvas.begin()
-            .arc(p2, 15, 0, Math.PI / 180 * 45)
-            .stroke()
-         const c = new Circle2D(100, 100, 15)
-         canvas.begin()
-            .arc(c, Math.PI, Math.PI / 180 * 270, true)
-            .stroke()
-         //         canvas.begin().moveTo(c).lineTo(c.add(0, 50)).stroke()
-         canvas.strokeStyle("#900")
-         canvas.arrow(c.sub(25, 0), c.add(-25, 20))
 
-         // const line = new Line2D(c, c.add(0, 40))
-         // line.moveLineBy(-30, 0)
-         // canvas.strokeStyle("#900")
-         // canvas.line(line)
-         // canvas.strokeStyle("#090")
-         // const l1 = line.cloneLine().rotateP1(Math.PI / 2).scaleTo(100)
-         // const l2 = line.cloneLine().rotateP1(Vector2D.toRadians(-15)).scaleTo(100)
-         // //this.begin().moveTo(arg[0]).lineTo(arg[1]).stroke()
-         // canvas
-         //    .line(l1)
-         //    .line(l2)
-      })
+   arc() {
+      this.addDoc().setInfo("arc", "Draw a Arc")
+         .renderInfo(canvas => {
+            canvas
+               .style('#999')
+               .fillText('( 50, 50 )', 30, 20)
+               .fillText('Point ( 150, 50 )', 115, 20)
+               .fillText('Circle ( 250, 50 )', 215, 20)
+               .dot(50, 50, 1)
+               .dot(150, 50, 1)
+               .dot(250, 50, 1)
+               .begin().arcArrow(50, 50, 15, (Math.PI / 4) * 1.5, Math.PI * 1.9).stroke()
+               .begin().arcArrow(150, 50, 15, 0, Math.PI * 0.9).stroke()
+               .begin().arcArrow(250, 50, 15, Math.PI * 1.1, (Math.PI / 2) * 0.8).stroke()
+               .style('#000')
+
+            canvas
+               .style('#999')
+               .fillText('( 50, 50 )', 30, 120)
+               .fillText('Point ( 150, 50 )', 115, 120)
+               .fillText('Circle ( 250, 50 )', 215, 120)
+               .dot(50, 150, 1)
+               .dot(150, 150, 1)
+               .dot(250, 150, 1)
+               .begin().arcArrow(50, 150, 15, (Math.PI / 4) * 0.85, Math.PI * 0.05, true).stroke()
+               .begin().arcArrow(150, 150, 15, (Math.PI / 2) * 3 * 0.1, Math.PI * 1.05, true).stroke()
+               .begin().arcArrow(250, 150, 15, Math.PI * 0.9, (Math.PI / 2) * 1.1, true).stroke()
+               .style('#000')
+
+         })
+         .render(canvas => {
+            canvas.begin()
+               .arc(50, 50, 15, 0, Math.PI / 4)
+               .stroke()
+            // point
+            const p = new Point2D(150, 50)
+            canvas.begin()
+               .arc(p, 15, Math.PI, Math.PI * 3 / 2)
+               .stroke()
+            // circle
+            const c = new Circle2D(250, 50, 15)
+            canvas.begin()
+               .arc(c, Math.PI / 2, Math.PI)
+               .stroke()
+            // anticlockwise
+            canvas.begin()
+               .arc(50, 150, 15, 0, Math.PI / 4, true)
+               .stroke()
+            // point
+            const p2 = new Point2D(150, 150)
+            canvas.begin()
+               .arc(p2, 15, Math.PI, Math.PI * 3 / 2, true)
+               .stroke()
+            // circle
+            const c2 = new Circle2D(250, 150, 15)
+            canvas.begin()
+               .arc(c2, Math.PI / 2, Math.PI, true)
+               .stroke()
+         })
    }
 }
 
