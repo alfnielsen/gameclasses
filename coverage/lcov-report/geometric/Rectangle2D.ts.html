@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>6/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>8/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">25% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>1/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>6/18</span>
             </div>
         
             
@@ -119,21 +119,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,22 +166,22 @@ export default class Rectangle2D extends Point2D {
    constructor(p: Vector2D, w: number, h: number)
    constructor(x: number, y: number, dim: Vector2D)
    constructor(x: number, y: number, w: number, h: number)
-<span class="fstat-no" title="function not covered" >   constructor(.</span>..arg: any[]) {
-<span class="cstat-no" title="statement not covered" >      if (arg[0] instanceof Vector2D &amp;&amp; arg[1] instanceof Vector2D) {</span>
+   constructor(...arg: any[]) {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (arg[0] instanceof Vector2D &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >arg[1] instanceof Vector2D)</span> {
 <span class="cstat-no" title="statement not covered" >         super(arg[0].x, arg[0].y)</span>
 <span class="cstat-no" title="statement not covered" >         this.dim = new Vector2D(arg[1])</span>
-      } else <span class="cstat-no" title="statement not covered" >if (arg[0] instanceof Line2D) {</span>
+      } else <span class="missing-if-branch" title="if path not taken" >I</span>if (arg[0] instanceof Line2D) {
 <span class="cstat-no" title="statement not covered" >         super(arg[0].x, arg[0].y)</span>
 <span class="cstat-no" title="statement not covered" >         this.dim = new Vector2D(arg[0].deltaVector())</span>
-      } else <span class="cstat-no" title="statement not covered" >if (arg[0] instanceof Vector2D &amp;&amp; typeof arg[1] === 'number') {</span>
+      } else <span class="missing-if-branch" title="if path not taken" >I</span>if (arg[0] instanceof Vector2D &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >typeof arg[1] === 'number')</span> {
 <span class="cstat-no" title="statement not covered" >         super(arg[0].x, arg[0].y)</span>
 <span class="cstat-no" title="statement not covered" >         this.dim = new Vector2D(arg[1], arg[2])</span>
-      } else <span class="cstat-no" title="statement not covered" >if (typeof arg[0] === 'number' &amp;&amp; arg[2] instanceof Vector2D) {</span>
+      } else <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof arg[0] === 'number' &amp;&amp; arg[2] instanceof Vector2D) {
 <span class="cstat-no" title="statement not covered" >         super(arg[0], arg[1])</span>
 <span class="cstat-no" title="statement not covered" >         this.dim = new Vector2D(arg[2])</span>
       } else {
-<span class="cstat-no" title="statement not covered" >         super(arg[0], arg[1])</span>
-<span class="cstat-no" title="statement not covered" >         this.dim = new Vector2D(arg[2], arg[3])</span>
+         super(arg[0], arg[1])
+         this.dim = new Vector2D(arg[2], arg[3])
       }
    }
 &nbsp;
@@ -208,7 +208,7 @@ export default class Rectangle2D extends Point2D {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Jun 20 2020 15:29:59 GMT+0200 (Central European Summer Time)
+                at Mon Jul 06 2020 21:33:06 GMT+0200 (Central European Summer Time)
             </div>
         </div>
         <script src="../prettify.js"></script>

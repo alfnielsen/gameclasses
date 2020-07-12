@@ -10,12 +10,12 @@ export default class Canvas {
    static radian = (des: number) => (Math.PI / 180) * des
    static degrees = (rad: number) => (rad / Math.PI) * 180
    constructor(
+      public width: number = 400,
+      public height: number = 400,
       public elm: HTMLCanvasElement = document.createElement('canvas'),
-      public w: number = 400,
-      public h: number = 400,
    ) {
       this.ctx = elm.getContext("2d")
-      this.resize(this.w, this.h)
+      this.resize(this.width, this.height)
    }
 
    setElm(elm: HTMLCanvasElement) {
@@ -26,8 +26,8 @@ export default class Canvas {
 
    // html-element
    resize(w: number, h: number) {
-      this.w = w
-      this.h = h
+      this.width = w
+      this.height = h
       this.elm.width = w
       this.elm.height = h
       this.elm.style.width = w + 'px'
@@ -565,15 +565,21 @@ export default class Canvas {
 
    // Specialized
 
+   clear() {
+      this.ctx.clearRect(0, 0, this.width, this.height)
+      return this
+   }
+
+
    grid(w: number, d: number): Canvas
    grid(dim: Vector2D): Canvas
    grid(...arg: any[]) {
       const dim = arg[0] instanceof Vector2D ? arg[0] : new Vector2D(arg[0], arg[1])
-      for (let x = dim.x; x < this.w; x += dim.x) {
-         this.line(x, 0, x, this.h)
+      for (let x = dim.x; x < this.width; x += dim.x) {
+         this.line(x, 0, x, this.height)
       }
-      for (let y = dim.y; y < this.h; y += dim.y) {
-         this.line(y, 0, y, this.h)
+      for (let y = dim.y; y < this.height; y += dim.y) {
+         this.line(y, 0, y, this.height)
       }
       return this
    }

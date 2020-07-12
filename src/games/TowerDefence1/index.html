@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TowerDefence1</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .docElm {
+        background: #c6d2ed;
+        border: 2px solid #aea3b0;
+      }
+      .title {
+        padding: 7px;
+        font-weight: 600;
+        background: #aea3b0;
+      }
+      .info {
+        padding: 7px;
+      }
+      .canvas {
+        background: #fff;
+        background-origin: 3px solid #000;
+      }
+      .code {
+        float: left;
+        width: 400px;
+        height: 200px;
+        overflow: auto;
+        padding: 5px;
+        display: block;
+        background: #e7e6f7;
+        white-space: pre;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <script type="module">
+      import TowerDefence1 from "../../../dist/games/TowerDefence1/TowerDefence1.js"
+      const game = new TowerDefence1()
+      document.querySelector("#game").append(game.getCanvasElm())
+      game.start()
+    </script>
+  </body>
+</html>

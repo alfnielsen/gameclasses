@@ -31,7 +31,8 @@ export class DocElm {
       r(this.canvas)
       let raw = r.toString()
       raw = raw.replace(/\n\s{9}/g, "\n")
-      raw = raw.replace(/\n\s*\}/g, "\n}")
+      raw = raw.replace(/\n\s{9}\}/g, "\n}")
+      raw = raw.replace(/\n\s*\}\s*$/g, "\n}")
       this.code.innerHTML = raw
       return this
    }

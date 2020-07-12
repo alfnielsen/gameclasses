@@ -10,10 +10,10 @@ export default class Vector2D {
    constructor(angle: number, length: number, angleVector: boolean, degrees: boolean)
    constructor()
    constructor(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
+      if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
          this.x = arg[1].x - arg[0].x
          this.y = arg[1].y - arg[0].y
-      } else if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
+      } else if (arg[0] instanceof Vector2D) {
          this.x = arg[0].x
          this.y = arg[0].y
       } else if (arg[2] === true && !arg[3]) {

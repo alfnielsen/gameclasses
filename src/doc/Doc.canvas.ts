@@ -4,6 +4,7 @@ import Line2D from "../geometric/Line2D.js"
 import Point2D from "../geometric/Point2D.js"
 import Vector2D from "../geometric/Vector2D.js"
 import Doc from "./DocElm.js"
+import AnimationFrame from "../util/AnimationFrame.js"
 
 export default class Doc_canvas extends Doc {
 
@@ -15,7 +16,12 @@ export default class Doc_canvas extends Doc {
       this.arc()
 
    }
+   ani(delta: (deltaTime: number, time: number) => void) {
+      return new AnimationFrame(delta).start()
+   }
+
    lineTo() {
+      let animate = this.ani
       this.addDoc().setInfo("lineTo", "Draw a Line")
          .renderInfo(canvas => {
             canvas
@@ -27,10 +33,15 @@ export default class Doc_canvas extends Doc {
                .style('#000')
          })
          .render(canvas => {
-            canvas.begin()
-               .moveTo(50, 50)
-               .lineTo(150, 150)
-               .stroke()
+            let y = 0, d = 1
+            animate((delta: number) => {
+               y += 2 * d
+               if (y < 0 || y > 200) { d *= -1 }
+               canvas.clear().begin()
+                  .moveTo(50, 50)
+                  .lineTo(150, y)
+                  .stroke()
+            })
          })
    }
 
