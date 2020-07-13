@@ -312,9 +312,9 @@ export default class Canvas {
    fillRect(rect: Rectangle2D): Canvas
    fillRect(...arg: any[]) {
       if (arg[0] instanceof Rectangle2D) {
-         this.ctx.fillRect(arg[0].x, arg[0].y, arg[0].dim.x, arg[0].dim.x)
+         this.ctx.fillRect(arg[0].x, arg[0].y, arg[0].dim.x, arg[0].dim.y)
       } else if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
-         this.ctx.fillRect(arg[0].x, arg[0].y, arg[1].x, arg[1].x)
+         this.ctx.fillRect(arg[0].x, arg[0].y, arg[1].x, arg[1].y)
       } else {
          this.ctx.fillRect(arg[0], arg[1], arg[2], arg[3])
       }
@@ -325,7 +325,7 @@ export default class Canvas {
    fillText(text: string, x: number, y: number, maxWidth?: number): Canvas
    fillText(...arg: any[]) {
       if (arg[1] instanceof Vector2D) {
-         this.ctx.fillText(arg[0], arg[1].x, arg[1].x, arg[2])
+         this.ctx.fillText(arg[0], arg[1].x, arg[1].y, arg[2])
       } else {
          this.ctx.fillText(arg[0], arg[1], arg[2], arg[3])
       }
@@ -540,7 +540,7 @@ export default class Canvas {
    strokeText(text: string, x: number, y: number, maxWidth?: number): Canvas
    strokeText(...arg: any[]) {
       if (arg[1] instanceof Vector2D) {
-         this.ctx.strokeText(arg[0], arg[1].x, arg[1].x, arg[2])
+         this.ctx.strokeText(arg[0], arg[1].x, arg[1].y, arg[2])
       } else {
          this.ctx.strokeText(arg[0], arg[1], arg[2], arg[3])
       }
@@ -614,14 +614,13 @@ export default class Canvas {
       } else {
          this.ctx.arc(arg[0], arg[1], arg[2], arg[3] ?? 0, arg[4] ?? Canvas.PI2, arg[5])
       }
-      this.stroke()
       return this
    }
 
-   circleFill(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
-   circleFill(c: Circle2D, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
-   circleFill(p: Vector2D, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
-   circleFill(...arg: any) {
+   fillCircle(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   fillCircle(c: Circle2D, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   fillCircle(p: Vector2D, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   fillCircle(...arg: any) {
       this.begin()
       if (arg[0] instanceof Circle2D) {
          this.ctx.arc(arg[0].x, arg[0].y, arg[0].r, arg[1] ?? 0, arg[2] ?? Canvas.PI2, arg[3])
@@ -631,6 +630,22 @@ export default class Canvas {
          this.ctx.arc(arg[0], arg[1], arg[2], arg[3] ?? 0, arg[4] ?? Canvas.PI2, arg[5])
       }
       this.fill()
+      return this
+   }
+
+   strokeCircle(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   strokeCircle(c: Circle2D, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   strokeCircle(p: Vector2D, radius: number, startAngle?: number, endAngle?: number, anticlockwise?: boolean): Canvas
+   strokeCircle(...arg: any) {
+      this.begin()
+      if (arg[0] instanceof Circle2D) {
+         this.ctx.arc(arg[0].x, arg[0].y, arg[0].r, arg[1] ?? 0, arg[2] ?? Canvas.PI2, arg[3])
+      } else if (arg[0] instanceof Vector2D) {
+         this.ctx.arc(arg[0].x, arg[0].y, arg[1], arg[2] ?? 0, arg[3] ?? Canvas.PI2, arg[4])
+      } else {
+         this.ctx.arc(arg[0], arg[1], arg[2], arg[3] ?? 0, arg[4] ?? Canvas.PI2, arg[5])
+      }
+      this.stroke()
       return this
    }
 

@@ -3,7 +3,6 @@ import AnimationFrame from "../util/AnimationFrame.js"
 import GameLayer from "./GameLayer.js"
 import IGameElm from "./IGameElm.js"
 
-
 export default class Game {
    canvas: Canvas
    frame: AnimationFrame
@@ -37,13 +36,17 @@ export default class Game {
       this.mainLayer.elms.push(elm)
    }
 
+   addElms(elms: IGameElm[]) {
+      elms.forEach(elm => this.addElm(elm))
+   }
+
    resize(w: number, h: number) {
       this.canvas.resize(w, h)
    }
 
    renderBase(deltaTime: number, time: number) {
       this.canvas.clear()
-      this.gameLayers.forEach(layer => layer.render(this.canvas, deltaTime, time))
+      //this.gameLayers.forEach(layer => layer.render(this.canvas, deltaTime, time))
       this.render(this.canvas, deltaTime, time)
    }
 
