@@ -1,43 +1,19 @@
 import Canvas from "../canvas/Canvas.js"
+import Point2D from "../geometric/Point2D.js"
+import Vector2D from "../geometric/Vector2D.js"
 import AnimationFrame from "../util/AnimationFrame.js"
-import GameLayer from "./GameLayer.js"
 import IGameElm from "./IGameElm.js"
 
 export default class Game {
    canvas: Canvas
    frame: AnimationFrame
-   bgLayer = new GameLayer("bg", 1)
-   mainLayer = new GameLayer("main", 100)
-   gameLayers: GameLayer[] = [
-      this.bgLayer,
-      this.mainLayer
-   ]
+   mousePos = new Point2D(0, 0)
 
    constructor(
    ) {
       this.canvas = new Canvas(500, 250)
       this.frame = new AnimationFrame(this.renderBase.bind(this))
-   }
-
-   addLayer(layer: GameLayer) {
-      this.gameLayers.push(layer)
-      this.sortGameLayer()
-   }
-
-   sortGameLayer() {
-      this.gameLayers.sort((gl1, gl2) => gl1.zIndex > gl2.zIndex ? -1 : 1)
-   }
-
-   addBgElm(elm: IGameElm) {
-      this.bgLayer.elms.push(elm)
-   }
-
-   addElm(elm: IGameElm) {
-      this.mainLayer.elms.push(elm)
-   }
-
-   addElms(elms: IGameElm[]) {
-      elms.forEach(elm => this.addElm(elm))
+      this.registerEvents()
    }
 
    resize(w: number, h: number) {
@@ -72,5 +48,21 @@ export default class Game {
       return this.canvas.elm
    }
 
+   registerEvents() {
+      this.canvas.elm.addEventListener("mousedown", this.mousedown.bind(this))
+      this.canvas.elm.addEventListener("mousemove", this.updateMouse.bind(this))
+      this.canvas.elm.addEventListener("mouseup", this.mouseup.bind(this))
+      document.addEventListener("keydown", this.keydown.bind(this))
+   }
+
+
+   mousedown(e: MouseEvent) { }
+   mouseup(e: MouseEvent) { }
+   mousemove(e: MouseEvent) { }
+   updateMouse(e: MouseEvent) {
+      this.mousePos.movePointTo(e.offsetX, e.offsetY)
+      this.mousemove(e)
+   }
+   keydown(e: KeyboardEvent) { }
 
 }
