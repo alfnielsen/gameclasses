@@ -132,19 +132,19 @@ export default class Canvas {
       return this
    }
 
-   style(strokeColor: string, fillColor = strokeColor) {
-      this.ctx.strokeStyle = strokeColor
-      this.ctx.fillStyle = fillColor
+   style(strokeStyle: string | CanvasGradient | CanvasPattern, fillStyle = strokeStyle) {
+      this.ctx.strokeStyle = strokeStyle
+      this.ctx.fillStyle = fillStyle
       return this
    }
 
-   strokeStyle(strokeColor: string) {
-      this.ctx.strokeStyle = strokeColor
+   strokeStyle(strokeStyle: string | CanvasGradient | CanvasPattern) {
+      this.ctx.strokeStyle = strokeStyle
       return this
    }
 
-   fillStyle(fillColor: string) {
-      this.ctx.fillStyle = fillColor
+   fillStyle(fillStyle: string | CanvasGradient | CanvasPattern) {
+      this.ctx.fillStyle = fillStyle
       return this
    }
 
