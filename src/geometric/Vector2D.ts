@@ -47,6 +47,10 @@ export default class Vector2D {
     return this
   }
 
+  _invert(): Vector2D {
+    return new Vector2D(-this.x, -this.y)
+  }
+
   invertX(): Vector2D {
     this.x = -this.x
     return this
@@ -65,6 +69,10 @@ export default class Vector2D {
     return this
   }
 
+  _rotate(angle: number): Vector2D {
+    return this.cloneAsVector().rotate(angle)
+  }
+
   rotateAntiClockwise(angle: number): Vector2D {
     const length = this.length()
     const resultingAngle = this.angle() - angle
@@ -73,11 +81,19 @@ export default class Vector2D {
     return this
   }
 
+  _rotateAntiClockwise(angle: number): Vector2D {
+    return this.cloneAsVector().rotateAntiClockwise(angle)
+  }
+
   rotateTo(angle: number): Vector2D {
     const length = this.length()
     this.x = Math.cos(angle) * length
     this.y = Math.sin(angle) * length
     return this
+  }
+
+  _rotateTo(angle: number): Vector2D {
+    return this.cloneAsVector().rotateTo(angle)
   }
 
   rotateAround(center: Vector2D, angle: number): Vector2D {
@@ -89,6 +105,9 @@ export default class Vector2D {
     this.x = center.x + Math.cos(resultingAngle) * deltaLength
     this.y = center.y + Math.sin(resultingAngle) * deltaLength
     return this
+  }
+  _rotateAround(center: Vector2D, angle: number): Vector2D {
+    return this.cloneAsVector().rotateAround(center, angle)
   }
 
   /*Number:radian*/
@@ -103,6 +122,10 @@ export default class Vector2D {
 
   angleVector(angle: number, length: number) {
     return this.add(Vector2D.fromAngle(angle, length))
+  }
+
+  _angleVector(angle: number, length: number) {
+    return Vector2D.fromAngle(angle, length).add(this)
   }
 
   /*Number:radian*/
@@ -131,6 +154,27 @@ export default class Vector2D {
     return x * x + y * y
   }
 
+  moveToXY(x: number, y: number): Vector2D {
+    this.x = x
+    this.y = y
+    return this
+  }
+
+  moveTo(p: Vector2D): Vector2D {
+    this.x = p.x
+    this.y = p.y
+    return this
+  }
+
+  moveToward(p: Vector2D, length: number): Vector2D {
+    this.add(this._vectorTo(p).scaleTo(length))
+    return this
+  }
+
+  _moveToward(p: Vector2D, length: number): Vector2D {
+    return this.cloneAsVector().add(this._vectorTo(p).scaleTo(length))
+  }
+
   /*Vector*/
   add(vec: Vector2D): Vector2D {
     this.x += vec.x
@@ -138,10 +182,18 @@ export default class Vector2D {
     return this
   }
 
+  _add(vec: Vector2D): Vector2D {
+    return new Vector2D(this.x + vec.x, this.y + vec.y)
+  }
+
   addScalar(k: number, k2 = k): Vector2D {
     this.x += k
     this.y += k2
     return this
+  }
+
+  _addScalar(k: number, k2 = k): Vector2D {
+    return new Vector2D(this.x + k, this.y + k2)
   }
 
   /*Vector*/
@@ -151,8 +203,16 @@ export default class Vector2D {
     return this
   }
 
+  _sub(vec: Vector2D): Vector2D {
+    return new Vector2D(this.x - vec.x, this.y - vec.y)
+  }
+
   vectorTo(vec: Vector2D): Vector2D {
     return this.delta(vec)
+  }
+
+  _vectorTo(vec: Vector2D): Vector2D {
+    return this._delta(vec)
   }
 
   delta(vec: Vector2D): Vector2D {
@@ -161,11 +221,19 @@ export default class Vector2D {
     return this
   }
 
+  _delta(vec: Vector2D): Vector2D {
+    return new Vector2D(vec.x - this.x, vec.y - this.y)
+  }
+
   /*Vector*/
   multi(vec: Vector2D): Vector2D {
     this.x *= vec.x
     this.y *= vec.y
     return this
+  }
+
+  _multi(vec: Vector2D): Vector2D {
+    return new Vector2D(this.y * vec.x, this.y * vec.y)
   }
 
   /*Vector*/
@@ -183,6 +251,11 @@ export default class Vector2D {
     return this
   }
 
+  /*Vector*/
+  _divide(vec: Vector2D): Vector2D {
+    return this.cloneAsVector().divide(vec)
+  }
+
   ratio() {
     if (this.y === 0) {
       return 0
@@ -196,18 +269,25 @@ export default class Vector2D {
     this.y *= k
     return this
   }
+  _scale(k: number) {
+    return new Vector2D(this.x * k, this.y * k)
+  }
 
   scaleTo(length: number) {
     const oLength = this.length()
     if (oLength === 0) {
       this.x = 0
       this.y = 0
-      return
+      return this
     }
     const ratio = length / oLength
     this.x *= ratio
     this.y *= ratio
     return this
+  }
+
+  _scaleTo(length: number) {
+    return this.cloneAsVector().scaleTo(length)
   }
 
   /*Number:scalar product - dot product */
@@ -228,6 +308,11 @@ export default class Vector2D {
     return this
   }
 
+  _projection(vec: Vector2D): Vector2D {
+    var ratio = this.scalar(vec) / vec.scalar(vec)
+    return new Vector2D(vec.x * ratio, vec.y * ratio)
+  }
+
   /*Number:distance*/
   distToProjection(vec: Vector2D): number {
     var ratio = this.scalar(vec) / vec.scalar(vec)
@@ -244,14 +329,38 @@ export default class Vector2D {
     return this
   }
 
+  _vectorToProjection(vec: Vector2D): Vector2D {
+    var ratio = this.scalar(vec) / vec.scalar(vec)
+    return new Vector2D(vec.x * ratio - this.x, vec.y * ratio - this.y)
+  }
+
+  /*Vector*/
+  _vectorToLine(p1: Vector2D, p2: Vector2D): Vector2D {
+    return p1._vectorTo(this).vectorToProjection(p1._vectorTo(p2))
+  }
+
+  vectorToLine(p1: Vector2D, p2: Vector2D): Vector2D {
+    return this.moveTo(this._vectorToLine(p1, p2))
+  }
+
+  distToLine(p1: Vector2D, p2: Vector2D): number {
+    return this._vectorToLine(p1, p2).length()
+  }
+
   normalize() {
     var length = this.length()
     if (length === 0) {
-      return Vector2D.norm
+      this.x = 1
+      this.y = 0
+      return this
     }
     this.x /= length
     this.y /= length
     return this
+  }
+
+  _normalize() {
+    return this.cloneAsVector().normalize()
   }
 
   round() {
@@ -260,10 +369,18 @@ export default class Vector2D {
     return this
   }
 
+  _round() {
+    return new Vector2D(Math.round(this.x), Math.round(this.y))
+  }
+
   floor() {
     this.x = Math.floor(this.x)
     this.y = Math.floor(this.y)
     return this
+  }
+
+  _floor() {
+    return new Vector2D(Math.floor(this.x), Math.floor(this.y))
   }
 
   log(msg?: string) {

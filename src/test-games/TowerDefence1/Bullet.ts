@@ -37,8 +37,8 @@ export default class Bullet extends Circle2D implements IGameElm {
   render(c: Canvas, delta: number, time: number, listIndex: number) {
     this.livingTime += delta
     const currentPos = Vector2D.fromVector(this)
-    const dirVector = this.delta(this.aimAt).scaleTo(this.speed)
-    const nextPos = this.add(dirVector)
+    const dirVector = this.cloneAsVector().delta(this.aimAt).scaleTo(this.speed)
+    const nextPos = this.cloneAsVector().add(dirVector)
     if (this.shouldExplode()) {
       this.explode(listIndex)
     }

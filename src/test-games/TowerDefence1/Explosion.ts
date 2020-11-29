@@ -74,7 +74,7 @@ export default class Explosion extends Circle2D implements IGameElm {
         .style(`rgba(${p.red},${p.green},0,.1)`)
         .fillCircle(p, rr)
         .style("000")
-        .strokeCircle(this, this.r)
+        .fillCircle(this, this.r)
     })
 
     c.restore()

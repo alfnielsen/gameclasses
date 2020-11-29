@@ -1,11 +1,37 @@
 import Canvas from "../../canvas/Canvas.js"
 import IGameElm from "../../game/IGameElm.js"
 import Circle2D from "../../geometric/Circle2D.js"
+import Vector2D from "../../geometric/Vector2D.js"
 import Explosion from "./Explosion.js"
 import TowerDefence1 from "./TowerDefence1.js"
 
 export default class Monster extends Circle2D implements IGameElm {
   delete = false
+  towardsPathPointIndex = 0
+
+  static create(option: {
+    game: TowerDefence1
+    x: number
+    y: number
+    r: number
+    health: number
+    speed: number
+    power: number
+    money: number
+    fullHealth?: number
+  }) {
+    return new Monster(
+      option.game,
+      option.x,
+      option.y,
+      option.r,
+      option.health,
+      option.speed,
+      option.power,
+      option.money,
+      option.fullHealth
+    )
+  }
 
   constructor(
     public game: TowerDefence1,
@@ -22,24 +48,34 @@ export default class Monster extends Circle2D implements IGameElm {
   }
 
   render(c: Canvas, delta: number, time: number, listIndex: number) {
-    if (this.x > this.game.canvas.width) {
-      this.game.elms.monsters.deleteList.push(listIndex)
-      this.game.life -= this.power
-    }
-
-    if (this.health <= 0) {
-      this.game.money += this.money
-      this.game.elms.monsters.deleteList.push(listIndex)
+    if (this.delete) {
+      return
     }
 
     this.game.elms.explosions.list.forEach((explosion) => {
       const dist = explosion.distTo(this)
       if (dist < explosion.r + this.r) {
         this.health -= explosion.power
+        if (this.health <= 0) {
+          this.game.money += this.money
+          this.delete = true
+          this.game.elms.monsters.deleteList.push(listIndex)
+        }
       }
     })
 
-    this.x += 2
+    let towardsPathPoint = this.game.level.path[this.towardsPathPointIndex]
+    this.moveToward(towardsPathPoint, this.speed)
+    if (this.distTo(towardsPathPoint) < this.r) {
+      if (this.towardsPathPointIndex === this.game.level.path.length - 1) {
+        this.delete = true
+        this.game.elms.monsters.deleteList.push(listIndex)
+        this.game.life -= this.power
+      } else {
+        this.towardsPathPointIndex += 1
+      }
+    }
+
     let percent = this.health / this.fullHealth
     if (percent < 0) percent = 0
     c.save()

@@ -1,6 +1,8 @@
 import Canvas from "../../canvas/Canvas.js"
 import Game from "../../game/Game.js"
 import IGameElm from "../../game/IGameElm.js"
+import Vector2D from "../../geometric/Vector2D.js"
+import { Level } from "./Level.js"
 import Bullet from "./Bullet.js"
 import CircleTower from "./CircleTower.js"
 import Explosion from "./Explosion.js"
@@ -40,6 +42,7 @@ export default class TowerDefence1 extends Game {
     this.elms.bullets,
     this.elms.explosions,
   ]
+  level: Level
 
   towerTypes: TowerMap[]
   placing?: TowerMap
@@ -53,87 +56,73 @@ export default class TowerDefence1 extends Game {
   constructor() {
     super()
     this.resize(1000, 250)
+    this.level = new Level(this)
     this.towerTypes = [
       {
         key: "1",
-        preview: new CircleTower(
-          this,
-          "Small Tower",
-          1,
-          -1000,
-          0,
-          5,
-          2,
-          40,
-          1,
-          300,
-          1000
-        ),
+        preview: CircleTower.create({
+          game: this,
+          name: "Small Tower",
+          index: 1,
+          x: -1000,
+          y: 0,
+          r: 5,
+          power: 2,
+          range: 70,
+          viewRange: 200,
+          cost: 300,
+          reloadTime: 1000,
+        }),
       },
       {
         key: "2",
-        preview: new CircleTower(
-          this,
-          "Fast Tower",
-          2,
-          -1000,
-          0,
-          5,
-          1,
-          45,
-          1,
-          500,
-          200
-        ),
+        preview: CircleTower.create({
+          game: this,
+          name: "Fast Tower",
+          index: 2,
+          x: -1000,
+          y: 0,
+          r: 5,
+          power: 1,
+          range: 45,
+          viewRange: 200,
+          cost: 500,
+          reloadTime: 200,
+        }),
       },
       {
         key: "3",
-        preview: new CircleTower(
-          this,
-          "Fast Tower",
-          2,
-          -1000,
-          0,
-          5,
-          1,
-          45,
-          1,
-          500,
-          200
-        ),
+        preview: CircleTower.create({
+          game: this,
+          name: "Fast Tower",
+          index: 2,
+          x: -1000,
+          y: 0,
+          r: 5,
+          power: 1,
+          range: 45,
+          viewRange: 200,
+          cost: 500,
+          reloadTime: 200,
+        }),
       },
       {
         key: "4",
-        preview: new CircleTower(
-          this,
-          "Super Tower",
-          4,
-          -1000,
-          0,
-          10,
-          25,
-          55,
-          1,
-          5000,
-          300
-        ),
+        preview: CircleTower.create({
+          game: this,
+          name: "Super Tower",
+          index: 4,
+          x: -1000,
+          y: 0,
+          r: 10,
+          power: 25,
+          range: 55,
+          viewRange: 200,
+          cost: 5000,
+          reloadTime: 300,
+        }),
       },
     ]
-  }
-
-  addRandomMonster() {
-    const size = 2 + Math.random() * 10
-    const monster = new Monster(
-      this,
-      Math.random() * -500,
-      10 + Math.random() * 200,
-      size,
-      size / 2,
-      size * 20,
-      5,
-      20
-    )
-    this.elms.monsters.list.push(monster)
   }
 
   mousedown(e: MouseEvent) {
@@ -187,6 +176,7 @@ export default class TowerDefence1 extends Game {
   }
 
   render(canvas: Canvas, deltaTime: number, time: number) {
+    this.level.render(canvas, deltaTime, time)
     this.placing?.preview.moveTo(this.mousePos)
 
     this.renderMenu(canvas)
@@ -195,7 +185,7 @@ export default class TowerDefence1 extends Game {
       this.spawnTime -= 1
       this.spawnCounter = this.spawnTime
       for (let i = 0; i < this.spawn; i++) {
-        this.addRandomMonster()
+        this.level.addRandomMonster()
       }
     }
 
