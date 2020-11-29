@@ -1,238 +1,277 @@
-
 export default class Vector2D {
-   public x: number
-   public y: number
+  static get zero(): Vector2D {
+    return new Vector2D(0, 0)
+  }
+  static Origin: Vector2D = Vector2D.zero
+  static get one(): Vector2D {
+    return new Vector2D(1, 1)
+  }
+  static get norm(): Vector2D {
+    return new Vector2D(1, 0)
+  }
 
-   constructor(p: Vector2D)
-   constructor(p1: Vector2D, p2: Vector2D)
-   constructor(x: number, y: number)
-   constructor(angle: number, length: number, angleVector: boolean)
-   constructor(angle: number, length: number, angleVector: boolean, degrees: boolean)
-   constructor()
-   constructor(...arg: any[]) {
-      if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
-         this.x = arg[1].x - arg[0].x
-         this.y = arg[1].y - arg[0].y
-      } else if (arg[0] instanceof Vector2D) {
-         this.x = arg[0].x
-         this.y = arg[0].y
-      } else if (arg[2] === true && !arg[3]) {
-         this.x = Math.cos(arg[0]) * arg[1]
-         this.y = Math.sin(arg[0]) * arg[1]
-      } else if (arg[3] === true) {
-         this.x = Math.cos(Vector2D.toRadians(arg[0])) * arg[1]
-         this.y = Math.sin(Vector2D.toRadians(arg[0])) * arg[1]
-      } else {
-         this.x = arg[0] ?? 0
-         this.y = arg[1] ?? 0
-      }
-   }
+  static fromAngle(angle: number, length: number): Vector2D {
+    return new Vector2D(Math.cos(angle) * length, Math.sin(angle) * length)
+  }
 
-   static toRadians = (des: number) => (Math.PI / 180) * des
-   static toDegrees = (rad: number) => (rad / Math.PI) * 180
-   static Origin = new Vector2D();
+  static fromArray(arr: number[]): Vector2D {
+    return new Vector2D(arr[0], arr[1])
+  }
+  static fromVector({ x, y }: { x: number; y: number }): Vector2D {
+    return new Vector2D(x, y)
+  }
 
-   Origin = Vector2D.Origin
+  constructor(public x: number, public y: number) {}
 
-   toString() {
-      return `[Vector2D(${this.x},${this.y})]`
-   }
+  Origin: Vector2D = Vector2D.Origin
 
-   cloneVector() {
-      return new Vector2D(this.x, this.y)
-   };
+  toString(): string {
+    return `[Vector2D(${this.x},${this.y})]`
+  }
 
-   invert() {
-      return new Vector2D(-this.x, -this.y)
-   };
+  cloneAsVector(): Vector2D {
+    return new Vector2D(this.x, this.y)
+  }
 
-   invertX() {
-      return new Vector2D(-this.x, this.y)
-   };
+  isEqualTo(vec: Vector2D): boolean {
+    return this.x === vec.x && this.y === vec.y
+  }
 
-   invertY() {
-      return new Vector2D(this.x, -this.y)
-   };
+  isZero(): boolean {
+    return this.x === 0 && this.y === 0
+  }
 
-   delta(x: number, y: number): Vector2D
-   delta(vec: Vector2D): Vector2D
-   delta(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return new Vector2D(arg[0].x - this.x, arg[0].y - this.y)
-      }
-      return new Vector2D(arg[0] - this.x, arg[1] - this.y)
-   };
+  invert(): Vector2D {
+    this.x = -this.x
+    this.y = -this.y
+    return this
+  }
 
-   distTo(x: number, y: number): number
-   distTo(vec: Vector2D): number
-   distTo(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return this.delta(arg[0]).length()
-      }
-      return this.delta(arg[0], arg[1]).length()
-   };
+  invertX(): Vector2D {
+    this.x = -this.x
+    return this
+  }
 
-   rotate(angle: number, degrees?: boolean) {
-      const length = this.length()
-      const currentAngle = this.angle(degrees)
-      return new Vector2D(currentAngle + angle, length, true, degrees)
-   }
+  invertY(): Vector2D {
+    this.y = -this.y
+    return this
+  }
 
-   rotateTo(angle: number, degrees?: boolean) {
-      if (degrees) {
-         angle = Vector2D.toRadians(angle)
-      }
-      const length = this.length()
-      return new Vector2D(angle, length, true)
-   }
+  rotate(angle: number): Vector2D {
+    const length = this.length()
+    const resultingAngle = this.angle() + angle
+    this.x = Math.cos(resultingAngle) * length
+    this.y = Math.sin(resultingAngle) * length
+    return this
+  }
 
-   /*Number:radian*/
-   angleTo(x: number, y: number, degrees?: boolean): number
-   angleTo(vec: Vector2D, degrees?: boolean): number
-   angleTo(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return this.delta(arg[0]).angle(arg[1])
-      }
-      return this.delta(arg[0], arg[1]).angle(arg[2])
-   };
+  rotateAntiClockwise(angle: number): Vector2D {
+    const length = this.length()
+    const resultingAngle = this.angle() - angle
+    this.x = Math.cos(resultingAngle) * length
+    this.y = Math.sin(resultingAngle) * length
+    return this
+  }
 
-   /*Number:radian*/
-   angleBetween(x: number, y: number, degrees?: boolean): number
-   angleBetween(vec: Vector2D, degrees?: boolean): number
-   angleBetween(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return Math.abs(this.angle(arg[1]) - arg[0].angle(arg[1]))
-      }
-      return Math.abs(this.angle(arg[2]) - new Vector2D(arg[0], arg[1]).angle(arg[2]))
-   };
+  rotateTo(angle: number): Vector2D {
+    const length = this.length()
+    this.x = Math.cos(angle) * length
+    this.y = Math.sin(angle) * length
+    return this
+  }
 
-   angleVector(angle: number, length: number, degrees?: boolean) {
-      return this.add(new Vector2D(angle, length, true, degrees))
-   };
+  rotateAround(center: Vector2D, angle: number): Vector2D {
+    let deltaX = this.x - center.x
+    let deltaY = this.y - center.y
+    const deltaLength = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    const deltaAngle = Math.atan2(deltaY, deltaX)
+    const resultingAngle = deltaAngle + angle
+    this.x = center.x + Math.cos(resultingAngle) * deltaLength
+    this.y = center.y + Math.sin(resultingAngle) * deltaLength
+    return this
+  }
 
-   /*Number:radian*/
-   angle(degrees?: boolean) {
-      const angleRadians = Math.atan2(this.y, this.x)
-      if (degrees) {
-         return Vector2D.toDegrees(angleRadians)
-      }
-      return angleRadians
-   };
+  /*Number:radian*/
+  angleTo(vec: Vector2D): number {
+    return Math.atan2(vec.y - this.y, vec.x - this.x)
+  }
 
-   /*Number:length*/
-   length() {
-      return Math.sqrt(this.x * this.x + this.y * this.y)
-   };
+  /*Number:radian*/
+  angleBetween(vec: Vector2D): number {
+    return Math.abs(this.angle() - vec.angle())
+  }
 
-   /*Vector*/
-   add(x: number, y: number): Vector2D
-   add(vec: Vector2D): Vector2D
-   add(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return new Vector2D(this.x + arg[0].x, this.y + arg[0].y)
-      }
-      return new Vector2D(this.x + arg[0], this.y + arg[1])
-   };
+  angleVector(angle: number, length: number) {
+    return this.add(Vector2D.fromAngle(angle, length))
+  }
 
-   /*Vector*/
-   sub(x: number, y: number): Vector2D
-   sub(vec: Vector2D): Vector2D
-   sub(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return new Vector2D(this.x - arg[0].x, this.y - arg[0].y)
-      }
-      return new Vector2D(this.x - arg[0], this.y - arg[1])
-   };
+  /*Number:radian*/
+  angle() {
+    return Math.atan2(this.y, this.x)
+  }
 
-   /*Vector*/
-   multi(x: number, y: number): Vector2D
-   multi(vec: Vector2D): Vector2D
-   multi(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return new Vector2D(this.x * arg[0].x, this.y * arg[0].y)
-      }
-      return new Vector2D(this.x * arg[0], this.y * arg[1])
-   };
+  /*Number:length*/
+  length() {
+    return Math.sqrt(this.x * this.x + this.y * this.y)
+  }
 
-   /*Vector*/
-   divide(x: number, y: number): Vector2D
-   divide(vec: Vector2D): Vector2D
-   divide(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return new Vector2D(this.x / arg[0].x, this.y / arg[0].y)
-      }
-      return new Vector2D(this.x / arg[0], this.y / arg[1])
-   };
+  lengthSqrt() {
+    return this.x * this.x + this.y * this.y
+  }
 
-   /*Vector*/
-   scale(k: number) {
-      return new Vector2D(this.x * k, this.y * k)
-   };
+  distTo(vec: Vector2D): number {
+    let x = vec.x - this.x
+    let y = vec.y - this.y
+    return Math.sqrt(x * x + y * y)
+  }
 
-   scaleTo(length: number) {
-      return new Vector2D(this.angle(), length, true)
-   };
+  distToSqrt(vec: Vector2D): number {
+    let x = vec.x - this.x
+    let y = vec.y - this.y
+    return x * x + y * y
+  }
 
-   /*Number:scalar product*/
-   scalar(x: number, y: number): number
-   scalar(vec: Vector2D): number
-   scalar(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return this.x * arg[0].x + this.y * arg[0].y
-      }
-      return this.x * arg[0] + this.y * arg[1]
-   };
+  /*Vector*/
+  add(vec: Vector2D): Vector2D {
+    this.x += vec.x
+    this.y += vec.y
+    return this
+  }
 
-   /*Number:cross product*/
-   cross(x: number, y: number): number
-   cross(vec: Vector2D): number
-   cross(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return this.x * arg[0].y - this.y * arg[0].x
-      }
-      // note y then x
-      return this.x * arg[1] - this.y * arg[0]
-   };
+  addScalar(k: number, k2 = k): Vector2D {
+    this.x += k
+    this.y += k2
+    return this
+  }
 
-   /*Vector:projection on oVector */
-   projection(x: number, y: number): Vector2D
-   projection(vec: Vector2D): Vector2D
-   projection(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return arg[0].scale(this.scalar(arg[0]) / arg[0].scalar(arg[0]))
-      }
-      const v = new Vector2D(arg[0], arg[1])
-      return v.scale(this.scalar(v) / v.scalar(v))
-   };
+  /*Vector*/
+  sub(vec: Vector2D): Vector2D {
+    this.x -= vec.x
+    this.y -= vec.y
+    return this
+  }
 
-   /*Number:distance*/
-   distToProjection(x: number, y: number): number
-   distToProjection(vec: Vector2D): number
-   distToProjection(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return this.distTo(this.projection(arg[0]))
-      }
-      return this.distTo(this.projection(arg[0], arg[1]))
-   };
+  vectorTo(vec: Vector2D): Vector2D {
+    return this.delta(vec)
+  }
 
-   /*Vector*/
-   vectorToProjection(x: number, y: number): Vector2D
-   vectorToProjection(vec: Vector2D): Vector2D
-   vectorToProjection(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         return this.delta(this.projection(arg[0]))
-      }
-      return this.delta(this.projection(arg[0], arg[1]))
-   };
+  delta(vec: Vector2D): Vector2D {
+    this.x = vec.x - this.x
+    this.y = vec.y - this.y
+    return this
+  }
 
-   log(msg?: string) {
-      if (msg) {
-         console.log(msg, this)
-      } else {
-         console.log(this)
-      }
-      return this
-   };
+  /*Vector*/
+  multi(vec: Vector2D): Vector2D {
+    this.x *= vec.x
+    this.y *= vec.y
+    return this
+  }
 
+  /*Vector*/
+  divide(vec: Vector2D): Vector2D {
+    if (vec.x === 0) {
+      this.x = 0
+    } else {
+      this.x /= vec.x
+    }
+    if (vec.y === 0) {
+      this.y = 0
+    } else {
+      this.y /= vec.y
+    }
+    return this
+  }
 
+  ratio() {
+    if (this.y === 0) {
+      return 0
+    }
+    return this.x / this.y
+  }
+
+  /*Vector*/
+  scale(k: number) {
+    this.x *= k
+    this.y *= k
+    return this
+  }
+
+  scaleTo(length: number) {
+    const oLength = this.length()
+    if (oLength === 0) {
+      this.x = 0
+      this.y = 0
+      return
+    }
+    const ratio = length / oLength
+    this.x *= ratio
+    this.y *= ratio
+    return this
+  }
+
+  /*Number:scalar product - dot product */
+  scalar(vec: Vector2D): number {
+    return this.x * vec.x + this.y * vec.y
+  }
+
+  /*Number:cross product*/
+  cross(vec: Vector2D): number {
+    return this.x * vec.y - this.y * vec.x
+  }
+
+  /*Vector:projection on oVector (Return new vector) */
+  projection(vec: Vector2D): Vector2D {
+    var ratio = this.scalar(vec) / vec.scalar(vec)
+    this.x = vec.x * ratio
+    this.y = vec.y * ratio
+    return this
+  }
+
+  /*Number:distance*/
+  distToProjection(vec: Vector2D): number {
+    var ratio = this.scalar(vec) / vec.scalar(vec)
+    const x = vec.x * ratio - this.x
+    const y = vec.y * ratio - this.y
+    return Math.sqrt(x * x + y * y)
+  }
+
+  /*Vector*/
+  vectorToProjection(vec: Vector2D): Vector2D {
+    var ratio = this.scalar(vec) / vec.scalar(vec)
+    this.x = vec.x * ratio - this.x
+    this.y = vec.y * ratio - this.y
+    return this
+  }
+
+  normalize() {
+    var length = this.length()
+    if (length === 0) {
+      return Vector2D.norm
+    }
+    this.x /= length
+    this.y /= length
+    return this
+  }
+
+  round() {
+    this.x = Math.round(this.x)
+    this.y = Math.round(this.y)
+    return this
+  }
+
+  floor() {
+    this.x = Math.floor(this.x)
+    this.y = Math.floor(this.y)
+    return this
+  }
+
+  log(msg?: string) {
+    if (msg) {
+      console.log(msg, this)
+    } else {
+      console.log(this)
+    }
+    return this
+  }
 }

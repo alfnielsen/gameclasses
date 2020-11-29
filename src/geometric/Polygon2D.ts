@@ -1,19 +1,13 @@
-import Point2D from "./Point2D.js"
 import Vector2D from "./Vector2D.js"
 
 export default class Polygon2D {
-   public points: Point2D[]
+  constructor(public points: Vector2D[]) {}
 
-   constructor(points: Vector2D[]) {
-      this.points = points.map(vec => new Point2D(vec))
-   }
+  cloneAsPolygon(): Polygon2D {
+    return new Polygon2D(this.points.map((point) => point))
+  }
 
-   clonePolygon(): Polygon2D {
-      return new Polygon2D(this.points)
-   };
-
-   toString() {
-      return `[Polygon2D(points:${this.points.length})]`
-   };
-
+  toString() {
+    return `[Polygon2D(points:${this.points.length})]`
+  }
 }

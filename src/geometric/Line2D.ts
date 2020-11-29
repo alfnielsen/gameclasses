@@ -2,138 +2,113 @@ import Point2D from "./Point2D.js"
 import Vector2D from "./Vector2D.js"
 
 export default class Line2D extends Point2D {
-   public p: Point2D
+  public end: Point2D
 
-   constructor(x1: number, y1: number, x2: number, y2: number)
-   constructor(p1: Vector2D, p2: Vector2D)
-   constructor(p1: Vector2D, angle: number, length: number, degrees?: true)
-   constructor(x1: number, y1: number, angle: number, length: number, angleVector: true, degrees?: true)
-   constructor(line: Line2D)
-   constructor(...arg: any[]) {
-      if (arg[0] instanceof Line2D) {
-         super(arg[0].cloneVector())
-         this.p = arg[0].p.clonePoint()
-      } else if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
-         super(arg[0])
-         this.p = new Point2D(arg[1])
-      } else if (arg[0] instanceof Vector2D) {
-         super(arg[0])
-         this.p = new Point2D(this.add(new Vector2D(arg[1], arg[2], true, arg[3])))
-      } else if (arg[4] === true) {
-         super(arg[0], arg[1])
-         this.p = new Point2D(this.add(new Vector2D(arg[2], arg[3], true, arg[5])))
-      } else {
-         super(arg[0], arg[1])
-         this.p = new Point2D(arg[2], arg[3])
-      }
-   }
+  static fromPoints(p1: Vector2D, p2: Vector2D): Line2D {
+    return new Line2D(p1.x, p1.y, p2.x, p2.y)
+  }
 
-   cloneLine(): Line2D {
-      return new Line2D(this as Vector2D, this.p.clonePoint())
-   }
+  static fromPointAndAngle(
+    vec: Vector2D,
+    angle: number,
+    length: number
+  ): Line2D {
+    let av = Vector2D.fromAngle(angle, length)
+    return new Line2D(vec.x, vec.y, vec.x + av.x, vec.y + av.y)
+  }
 
-   length(): number {
-      return this.deltaVector().length()
-   }
+  constructor(x1: number, y1: number, x2: number, y2: number) {
+    super(x1, y1)
+    this.end = new Point2D(x2, y2)
+  }
 
-   angle(degrees?: boolean): number {
-      return this.deltaVector().angle(degrees)
-   }
+  cloneAsLine(): Line2D {
+    return new Line2D(this.x, this.y, this.end.x, this.end.y)
+  }
 
-   reverse() {
-      this.moveLineTo(this.p.clonePoint(), super.clonePoint())
-      return this
-   }
+  length(): number {
+    return this.deltaVector().length()
+  }
 
-   deltaVector() {
-      return this.delta(this.p)
-   }
+  angle(): number {
+    return this.deltaVector().angle()
+  }
 
-   deltaVectorBack() {
-      return this.p.delta(this)
-   }
+  reverse() {
+    const x = this.x
+    this.x = this.end.x
+    this.end.x = x
+    const y = this.y
+    this.y = this.end.y
+    this.end.y = y
+    return this
+  }
 
-   rotateFromP1(angle: number, degrees?: boolean) {
-      let newPoint = this.deltaVector().rotate(angle, degrees).add(this)
-      this.p.movePointTo(newPoint)
-      return this
-   }
+  deltaVector() {
+    return new Vector2D(this.end.x - this.x, this.end.y - this.y)
+  }
 
-   rotateFromP2(angle: number, degrees?: boolean) {
-      let newPoint = this.deltaVectorBack().rotate(angle, degrees).add(this.p)
-      this.movePointTo(newPoint)
-      return this
-   }
+  deltaVectorBack() {
+    return new Vector2D(this.x - this.end.x, this.y - this.end.y)
+  }
 
-   scaleLine(k: number) {
-      const newPoint = this.deltaVector().scale(k).add(this)
-      this.p.movePointTo(newPoint)
-      return this
-   }
+  rotateFromP1(angle: number) {
+    let newPoint = this.deltaVector().rotate(angle).add(this)
+    this.end.moveTo(newPoint)
+    return this
+  }
 
-   scaleLineTo(k: number) {
-      const newPoint = this.deltaVector().scaleTo(k).add(this)
-      this.p.movePointTo(newPoint)
-      return this
-   }
+  rotateFromP2(angle: number) {
+    let newPoint = this.deltaVectorBack().rotate(angle).add(this.end)
+    this.moveTo(newPoint)
+    return this
+  }
 
-   scaleLineToByP2(k: number) {
-      const newPoint = this.deltaVectorBack().scaleTo(k).add(this.p)
-      this.movePointTo(newPoint)
-      return this
-   }
+  scaleLineFromP1(k: number) {
+    const newPoint = this.deltaVector().scale(k).add(this)
+    this.end.moveTo(newPoint)
+    return this
+  }
 
-   moveLineToByP1(x: number, y: number): Line2D
-   moveLineToByP1(p: Vector2D): Line2D
-   moveLineToByP1(...arg: any[]) {
-      const vec = arg[0] instanceof Vector2D ? arg[0] : new Vector2D(arg[0], arg[1])
-      const delta = this.deltaVector().add(vec)
-      super.movePointTo(vec)
-      this.p.movePointTo(delta)
-      return this
-   }
+  scaleLineTo(k: number) {
+    const newPoint = this.deltaVector().scaleTo(k).add(this)
+    this.end.moveTo(newPoint)
+    return this
+  }
 
-   moveLineToByP2(x: number, y: number): Line2D
-   moveLineToByP2(p: Vector2D): Line2D
-   moveLineToByP2(...arg: any[]) {
-      const vec = arg[0] instanceof Vector2D ? arg[0] : new Vector2D(arg[0], arg[1])
-      const delta = this.deltaVectorBack().add(vec)
-      this.p.movePointTo(vec)
-      super.movePointTo(delta)
-      return this
-   }
+  scaleLineToByP2(k: number) {
+    const newPoint = this.deltaVectorBack().scaleTo(k).add(this.end)
+    this.moveTo(newPoint)
+    return this
+  }
 
-   moveLineTo(x1: number, y1: number, x2: number, y2: number): Line2D
-   moveLineTo(p1: Vector2D, p2: Vector2D): Line2D
-   moveLineTo(...arg: any[]) {
-      if (arg[0] instanceof Vector2D && arg[1] instanceof Vector2D) {
-         super.movePointTo(arg[0])
-         this.p.movePointTo(arg[1])
-      } else {
-         super.movePointTo(arg[0], arg[1])
-         this.p.movePointTo(arg[2], arg[3])
-      }
-      return this
-   }
+  moveLineToByP1(vec: Vector2D): Line2D {
+    const delta = this.deltaVector().add(vec)
+    this.moveTo(vec)
+    this.end.moveTo(delta)
+    return this
+  }
 
+  moveLineToByP2(vec: Vector2D): Line2D {
+    const delta = this.deltaVectorBack().add(vec)
+    this.end.moveTo(vec)
+    this.moveTo(delta)
+    return this
+  }
 
-   moveLineBy(x1: number, y1?: number, x2?: number, y2?: number): Line2D
-   moveLineBy(p1: Vector2D, p2?: Vector2D): Line2D
-   moveLineBy(...arg: any[]) {
-      if (arg[0] instanceof Vector2D) {
-         super.movePointBy(arg[0])
-         this.p.movePointBy(arg[1] ?? arg[0])
-      } else {
-         super.movePointBy(arg[0], arg[1])
-         this.p.movePointBy(arg[2] ?? arg[0], arg[3] ?? arg[1] ?? arg[0])
-      }
-      return this
-   };
+  moveLineTo(vec1: Vector2D, vec2: Vector2D): Line2D {
+    this.moveTo(vec1)
+    this.end.moveTo(vec2)
+    return this
+  }
 
-   toString() {
-      return `[Line2D(${this.x},${this.y},${this.p.x},${this.p.y})]`
-   }
+  moveLineBy(vec1: Vector2D, vec2: Vector2D = vec1): Line2D {
+    this.moveBy(vec1)
+    this.end.moveBy(vec2)
+    return this
+  }
 
+  toString() {
+    return `[Line2D(${this.x},${this.y},${this.end.x},${this.end.y})]`
+  }
 }
-
-
