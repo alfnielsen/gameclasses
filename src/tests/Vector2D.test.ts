@@ -15,6 +15,7 @@ test("Constructor must accept 4 overloads", () => {
   const v4 = Vector2D.fromAngle(MathX.toRadians(90), 2)
   expect(v4.x).toBeCloseTo(0, 6)
   expect(v4.y).toBeCloseTo(2, 6)
+  
 })
 
 test("static factories: zero, one and norm: should return correct vectors", () => {
